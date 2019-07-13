@@ -2,10 +2,12 @@
 
 ![screen shot](ss.png)
 
-Image donwloader app for macOS.
-e. g. https://domain.com/imgpath/001.jpg 〜 https://domain.com/imgpath/099.jpg
+Simple Image Downloader for macOS made by SwiftUI + Combine.
 
-It is made by SwiftUI+Combine.
+## Feature
+
+* Download sequence number of URLs.
+  * e.g. https://domain.com/imgpath/001.jpg 〜 https://domain.com/imgpath/099.jpg
 
 ## WIP
 
