@@ -119,14 +119,19 @@ struct RequestPublisher: Publisher {
 }
 
 class Requester: BindableObject {
+    
     private var cancellable: Cancellable?
-    let didChange = PassthroughSubject<Requester, Never>()
+    let willChange = PassthroughSubject<Requester, Never>()
     var logStrings: [String] = [] {
         didSet {
-            DispatchQueue.main.async { // なぜか receiveOn ができないので…
-                self.didChange.send(self)
+            DispatchQueue.main.async { // Because receiveOn don't work
+                self.willChange.send(self)
             }
         }
+    }
+    
+    deinit {
+        print("deinited")
     }
     
     func request(allNums: [Int], digits: Int, ext: String, url: String, path: String) {
@@ -138,7 +143,7 @@ class Requester: BindableObject {
                 .eraseToAnyPublisher()
 //                .subscribe(on: concurrentQueue)
 //                .receive(on: RunLoop.main)
-//                .debounce(for: .milliseconds(10_000), scheduler: RunLoop.main)
+//                .debounce(for: .milliseconds(1_000), scheduler: RunLoop.main)
                 .sink(receiveCompletion: { completion in
                     switch completion {
                     case .finished:
@@ -158,7 +163,7 @@ class Requester: BindableObject {
 }
 
 struct ContentView : View {
-    @State var url: String = "" // ex. https://www.bikaken.or.jp/research/group/shibasaki/shibasaki-lab/lab-info/gallery/sympo19th/images/001.jpg
+    @State var url: String = "https://www.bikaken.or.jp/research/group/shibasaki/shibasaki-lab/lab-info/gallery/sympo19th/images/001.jpg" // ex. https://www.bikaken.or.jp/research/group/shibasaki/shibasaki-lab/lab-info/gallery/sympo19th/images/001.jpg
     @State var startNum: String = "001"
     @State var endNum: String = "010"
     @State var ext: String = "jpg"
